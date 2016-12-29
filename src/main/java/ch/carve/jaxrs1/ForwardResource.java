@@ -1,5 +1,6 @@
 package ch.carve.jaxrs1;
 
+import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
@@ -14,19 +15,20 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 @Path("/forward")
 public class ForwardResource {
 
+    private static URI uri = URI.create("http://hello/hello/v1/hello");
+
     static int count = 0;
     static long nanos = 0;
 
-    private Client client;
+    private static Client client = new ResteasyClientBuilder()
+            .maxPooledPerRoute(20)
+            .connectionPoolSize(60)
+            .socketTimeout(10, TimeUnit.SECONDS)
+            .register(ResolveHostFilter.class)
+            .build();
 
     @PostConstruct
     public void initRestClient() {
-        client = new ResteasyClientBuilder()
-                .maxPooledPerRoute(5)
-                .connectionPoolSize(10)
-                .socketTimeout(10, TimeUnit.SECONDS)
-                .register(ResolveHostFilter.class)
-                .build();
     }
 
     @GET
@@ -34,7 +36,7 @@ public class ForwardResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String forward() {
         long start = System.nanoTime();
-        String response = client.target("http://hello/hello/v1/hello").request().get(String.class);
+        String response = client.target(uri).request().get(String.class);
         nanos += (System.nanoTime() - start);
         count++;
         return response;

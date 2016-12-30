@@ -1,4 +1,4 @@
-package ch.carve.jaxrs1;
+package ch.carve.consul;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;

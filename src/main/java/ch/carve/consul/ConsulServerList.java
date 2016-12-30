@@ -1,10 +1,9 @@
-package ch.carve.jaxrs1;
+package ch.carve.consul;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 
 import com.orbitz.consul.Consul;
@@ -18,7 +17,7 @@ public class ConsulServerList {
     private List<String> servers = null;
     private String service = null;
 
-    @Schedule(second = "*/30", minute = "*", hour = "*", persistent = false)
+    // @Schedule(second = "*/30", minute = "*", hour = "*", persistent = false)
     public void reload() {
         List<ServiceHealth> nodes = consul.healthClient().getHealthyServiceInstances(service).getResponse();
         servers = nodes.stream()

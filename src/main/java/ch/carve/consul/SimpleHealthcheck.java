@@ -1,4 +1,4 @@
-package ch.carve.jaxrs1;
+package ch.carve.consul;
 
 import javax.ejb.Singleton;
 import javax.ws.rs.GET;

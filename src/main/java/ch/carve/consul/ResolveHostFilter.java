@@ -1,4 +1,4 @@
-package ch.carve.jaxrs1;
+package ch.carve.consul;
 
 import java.io.IOException;
 import java.net.URI;

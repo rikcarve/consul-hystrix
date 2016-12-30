@@ -1,4 +1,4 @@
-package ch.carve.jaxrs1;
+package ch.carve.consul;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

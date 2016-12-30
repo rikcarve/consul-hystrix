@@ -1,12 +1,10 @@
 package ch.carve.consul;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
+import javax.ejb.Schedule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,26 +12,40 @@ import org.slf4j.LoggerFactory;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.model.health.ServiceHealth;
 
-public class ResolveHostFilter implements ClientRequestFilter {
-    private static final Logger logger = LoggerFactory.getLogger(ResolveHostFilter.class);
+public class ConsulUriBuilder {
+    private static final Logger logger = LoggerFactory.getLogger(ConsulUriBuilder.class);
 
     private static Consul consul = Consul.builder().withUrl("http://192.168.99.100:8500").build();
-
+    private String service = null;
     private List<String> availableServices = null;
     private boolean needReload = true;
 
-    @Override
-    public void filter(ClientRequestContext requestContext) throws IOException {
-        String host = requestContext.getUri().getHost();
+    @Schedule(second = "*/30", minute = "*", hour = "*", persistent = false)
+    public void reload() {
+        logger.debug("Timer scheduled reload");
+        if (service != null) {
+            availableServices = getUpdatedListOfServers(service);
+        }
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    public URI build(URI uri) {
+        String host = uri.getHost();
+        if (service == null) {
+            service = host;
+        }
         if (needReload || availableServices == null) {
-            availableServices = getUpdatedListOfServers(host);
-            logger.debug("serverlist updated, count: {}", availableServices.size());
+            reload();
+            logger.debug("serverlist reloaded, count: {}", availableServices.size());
             needReload = false;
         }
         String newHost = availableServices.get(0);
-        URI newUri = URI.create("http://" + newHost + requestContext.getUri().getPath());
+        URI newUri = URI.create("http://" + newHost + uri.getPath());
         logger.debug("URL: {}", newUri);
-        requestContext.setUri(newUri);
+        return newUri;
     }
 
     public void setReload() {

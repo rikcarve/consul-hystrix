@@ -22,7 +22,7 @@ public class HelloWorldCommand extends HystrixCommand<String> {
             .build();
 
     @Inject
-    private ConsulServiceDiscovery consul;
+    private ServiceDiscovery consul;
 
     public HelloWorldCommand() {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(uri.getHost()))

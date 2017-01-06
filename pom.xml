@@ -12,8 +12,8 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <hystrix.version>1.5.9</hystrix.version>
         <resteasy.version>3.0.14.Final</resteasy.version>
-        <fo.docker.host>tcp://192.168.99.100:2376</fo.docker.host>
-        <fo.docker.certs>C:/Users/rik/.docker/machine/certs</fo.docker.certs>
+        <ao.docker.host>tcp://192.168.99.100:2376</ao.docker.host>
+        <ao.docker.certs>C:/Users/rik/.docker/machine/certs</ao.docker.certs>
     </properties>
  
     <dependencies>
@@ -63,10 +63,10 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.17.2</version>
+                <version>0.19.0</version>
                 <configuration>
-                    <dockerHost>${fo.docker.host}</dockerHost>
-                    <certPath>${fo.docker.certs}</certPath>
+                    <dockerHost>${ao.docker.host}</dockerHost>
+                    <certPath>${ao.docker.certs}</certPath>
                     <registry>docker.io</registry>
                     <images>
                         <image>
@@ -95,7 +95,9 @@
                                 </assembly>
                             </build>
                             <run>
-                                <ports>8080:8080</ports>
+                                <ports>
+									<port>8080:8080</port>
+								</ports>
                                 <log>
                                     <prefix>DOCKER</prefix>
                                 </log>

@@ -14,7 +14,7 @@ import com.netflix.hystrix.HystrixCommandProperties;
 
 public class HelloWorldCommand extends HystrixCommand<String> {
 
-    private static URI uri = URI.create("http://hello/hello/v1/hello");
+    private static final URI uri = URI.create("http://hello/hello/v1/hello");
     private static Client client = new ResteasyClientBuilder()
             .maxPooledPerRoute(20)
             .connectionPoolSize(60)
@@ -23,6 +23,8 @@ public class HelloWorldCommand extends HystrixCommand<String> {
 
     @Inject
     private ServiceDiscovery consul;
+
+    private URI resolvedUri;
 
     public HelloWorldCommand() {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(uri.getHost()))
@@ -33,12 +35,13 @@ public class HelloWorldCommand extends HystrixCommand<String> {
 
     @Override
     protected String run() throws Exception {
-        return client.target(consul.resolve(uri)).request().get(String.class);
+        resolvedUri = consul.resolve(uri);
+        return client.target(resolvedUri).request().get(String.class);
     }
 
     @Override
     protected String getFallback() {
-        consul.notifyError(uri.getHost());
+        consul.notifyError(uri.getHost(), resolvedUri.getHost() + ":" + resolvedUri.getPort());
         return client.target(consul.resolve(uri)).request().get(String.class);
     }
 }

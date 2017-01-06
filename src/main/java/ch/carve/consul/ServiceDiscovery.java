@@ -20,12 +20,12 @@ import org.slf4j.LoggerFactory;
 public class ServiceDiscovery {
     private static final Logger logger = LoggerFactory.getLogger(ServiceDiscovery.class);
 
-    private Map<String, List<String>> hosts = new ConcurrentHashMap<>();
+    private Map<String, List<String>> hosts = new ConcurrentHashMap<>(16, 0.75f, 1);
 
     @Inject
     private ServiceDiscoveryBackend backend;
 
-    @Schedule(second = "*/30", minute = "*", hour = "*", persistent = false)
+    @Schedule(second = "*/10", minute = "*", hour = "*", persistent = false)
     public void timer() {
         logger.info("timer");
         hosts.keySet().stream().forEach((k) -> backend.updateListAsync(k, hosts));
@@ -51,14 +51,14 @@ public class ServiceDiscovery {
     }
 
     /**
-     * Notify after an error occured with this service. Triggers a reload of
-     * hosts from the consul server
+     * Notify after an error occurred with this service. removes erroneous host from list
      * 
      * @param service
+     * @param host 
      */
-    public void notifyError(String service) {
-        logger.info("Service {} marked for reload", service);
-        hosts.remove(service);
+    public void notifyError(String service, String hostPort) {
+        logger.info("Host {} of service {} marked erroneous", hostPort, service);
+        hosts.get(service).remove(hostPort);
     }
 
     private String filter(List<String> list) {

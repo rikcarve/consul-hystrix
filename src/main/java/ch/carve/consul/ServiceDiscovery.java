@@ -1,7 +1,7 @@
 package ch.carve.consul;
 
 import java.net.URI;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class ServiceDiscovery {
     private static final Logger logger = LoggerFactory.getLogger(ServiceDiscovery.class);
 
-    private Map<String, List<String>> hosts = new ConcurrentHashMap<>(16, 0.75f, 1);
+    private Map<String, List<String>> hosts = new ConcurrentHashMap<>();
 
     @Inject
     private ServiceDiscoveryBackend backend;
@@ -38,32 +38,47 @@ public class ServiceDiscovery {
      * @return
      */
     public URI resolve(URI uri) {
-        logger.info("resolve");
         String service = uri.getHost();
         List<String> list = hosts.get(service);
-        if (list == null || list == Collections.EMPTY_LIST) {
+        if (isNullOrEmpty(list)) {
             list = backend.getUpdatedListOfServers(service);
-            hosts.put(service, list);
+            if (!isNullOrEmpty(list)) {
+                hosts.put(service, list);
+            } else {
+                throw new NoServiceRegisteredException();
+            }
         }
         String newHost = filter(list);
+        logger.info("resolved to {}", newHost);
         URI newUri = URI.create("http://" + newHost + uri.getPath());
         return newUri;
     }
 
     /**
-     * Notify after an error occurred with this service. removes erroneous host from list
+     * Notify after an error occurred with this service. removes erroneous host
+     * from list
      * 
      * @param service
-     * @param host 
+     * @param host
      */
     public void notifyError(String service, String hostPort) {
         logger.info("Host {} of service {} marked erroneous", hostPort, service);
-        hosts.get(service).remove(hostPort);
+        List<String> list = hosts.get(service);
+        if (list != null) {
+            hosts.get(service).remove(hostPort);
+        }
     }
 
     private String filter(List<String> list) {
         // future: get local host first if available, or loadbalance
-        return list.get(0);
+        if (!isNullOrEmpty(list)) {
+            return list.get(0);
+        } else {
+            throw new NoServiceRegisteredException();
+        }
     }
 
+    private static boolean isNullOrEmpty(final Collection<?> c) {
+        return c == null || c.isEmpty();
+    }
 }

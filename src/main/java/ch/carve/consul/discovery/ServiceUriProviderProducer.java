@@ -1,4 +1,4 @@
-package ch.carve.consul;
+package ch.carve.consul.discovery;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +32,7 @@ public class ServiceUriProviderProducer {
     @Produces
     @DiscoverableServiceUriProvider(name = "producer")
     public ServiceUriProvider getServiceUriProvider(InjectionPoint ip) {
+        logger.info("produce service provider");
         String serviceName = ip.getAnnotated().getAnnotation(DiscoverableServiceUriProvider.class).name();
         List<String> hosts = services.get(serviceName);
         if (isNullOrEmpty(hosts)) {

@@ -1,4 +1,4 @@
-package ch.carve.consul;
+package ch.carve.consul.discovery;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;

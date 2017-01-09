@@ -1,4 +1,4 @@
-package ch.carve.consul;
+package ch.carve.consul.discovery;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,8 +24,7 @@ import com.orbitz.consul.model.health.ServiceHealth;
 public class ConsulBackend implements ServiceDiscoveryBackend {
     private static final Logger logger = LoggerFactory.getLogger(ConsulBackend.class);
 
-    private static Consul consul = Consul.builder()
-            .withUrl(System.getProperty("consul.url", "http://192.168.99.100:8500")).build();
+    private static Consul consul = Consul.builder().withUrl(System.getProperty("consul.url", "http://192.168.99.100:8500")).build();
 
     /*
      * (non-Javadoc)

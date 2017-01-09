@@ -12,6 +12,9 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 
+import ch.carve.consul.discovery.DiscoverableServiceUriProvider;
+import ch.carve.consul.discovery.ServiceUriProvider;
+
 public class HelloWorldCommand extends HystrixCommand<String> {
 
     private static final URI uri = URI.create("http://hello/hello/v1/hello");

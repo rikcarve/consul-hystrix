@@ -1,4 +1,4 @@
-package ch.carve.consul;
+package ch.carve.consul.discovery;
 
 import java.net.URI;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package ch.carve.consul;
+package ch.carve.consul.discovery;
 
 public class NoServiceRegisteredException extends RuntimeException {
 

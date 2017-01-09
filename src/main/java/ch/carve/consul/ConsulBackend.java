@@ -1,6 +1,7 @@
 package ch.carve.consul;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,8 @@ import com.orbitz.consul.model.health.ServiceHealth;
 public class ConsulBackend implements ServiceDiscoveryBackend {
     private static final Logger logger = LoggerFactory.getLogger(ConsulBackend.class);
 
-    private static Consul consul = Consul.builder().withUrl(System.getProperty("consul.url", "http://192.168.99.100:8500")).build();
+    private static Consul consul = Consul.builder()
+            .withUrl(System.getProperty("consul.url", "http://192.168.99.100:8500")).build();
 
     /*
      * (non-Javadoc)
@@ -47,7 +49,7 @@ public class ConsulBackend implements ServiceDiscoveryBackend {
      */
     @Override
     public List<String> getUpdatedListOfServers(String service) {
-        List<String> result = new ArrayList<>();
+        List<String> result = Collections.synchronizedList(new ArrayList<>());
         List<ServiceHealth> nodes = consul.healthClient().getHealthyServiceInstances(service).getResponse();
         for (ServiceHealth node : nodes) {
             result.add(node.getService().getAddress() + ":" + node.getService().getPort());

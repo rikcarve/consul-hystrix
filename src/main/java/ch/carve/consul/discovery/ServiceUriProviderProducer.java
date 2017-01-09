@@ -30,10 +30,10 @@ public class ServiceUriProviderProducer {
     }
 
     @Produces
-    @DiscoverableServiceUriProvider(name = "producer")
+    @DiscoverableService(name = "producer")
     public ServiceUriProvider getServiceUriProvider(InjectionPoint ip) {
         logger.info("produce service provider");
-        String serviceName = ip.getAnnotated().getAnnotation(DiscoverableServiceUriProvider.class).name();
+        String serviceName = ip.getAnnotated().getAnnotation(DiscoverableService.class).name();
         List<String> hosts = services.get(serviceName);
         if (isNullOrEmpty(hosts)) {
             hosts = backend.getUpdatedListOfServers(serviceName);

@@ -14,7 +14,7 @@ import javax.inject.Qualifier;
 @Qualifier
 @Retention(RUNTIME)
 @Target({ TYPE, METHOD, FIELD })
-public @interface DiscoverableServiceUriProvider {
+public @interface DiscoverableService {
 
     @Nonbinding
     String name();

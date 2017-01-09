@@ -12,7 +12,7 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 
-import ch.carve.consul.discovery.DiscoverableServiceUriProvider;
+import ch.carve.consul.discovery.DiscoverableService;
 import ch.carve.consul.discovery.ServiceUriProvider;
 
 public class HelloWorldCommand extends HystrixCommand<String> {
@@ -28,7 +28,7 @@ public class HelloWorldCommand extends HystrixCommand<String> {
             .build();
 
     @Inject
-    @DiscoverableServiceUriProvider(name = SERVICE_NAME)
+    @DiscoverableService(name = SERVICE_NAME)
     private ServiceUriProvider service;
 
     public HelloWorldCommand() {

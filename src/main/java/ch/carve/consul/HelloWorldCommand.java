@@ -1,6 +1,5 @@
 package ch.carve.consul;
 
-import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -17,7 +16,6 @@ import ch.carve.consul.discovery.ServiceUriProvider;
 
 public class HelloWorldCommand extends HystrixCommand<String> {
 
-    private static final URI uri = URI.create("http://hello/hello/v1/hello");
     private static final String SERVICE_NAME = "hello";
     private static final String PATH = "/hello/v1/hello";
 
@@ -28,11 +26,11 @@ public class HelloWorldCommand extends HystrixCommand<String> {
             .build();
 
     @Inject
-    @DiscoverableService(name = SERVICE_NAME)
+    @DiscoverableService(serviceName = SERVICE_NAME)
     private ServiceUriProvider service;
 
     public HelloWorldCommand() {
-        super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(uri.getHost()))
+        super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(SERVICE_NAME))
                 .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                         .withExecutionIsolationStrategy(HystrixCommandProperties.ExecutionIsolationStrategy.SEMAPHORE)
                         .withCircuitBreakerRequestVolumeThreshold(5)));

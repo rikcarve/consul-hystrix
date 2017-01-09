@@ -7,11 +7,18 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Provides a createUri method which uses a list of hosts provided by a service
+ * discovery.
+ * 
+ * @author rik
+ *
+ */
 public class ServiceUriProvider {
     private static final Logger logger = LoggerFactory.getLogger(ServiceUriProvider.class);
 
     private String serviceName;
-    List<String> hosts;
+    private List<String> hosts;
     private String currentHost;
 
     public ServiceUriProvider(String serviceName, List<String> hosts) {
@@ -40,7 +47,7 @@ public class ServiceUriProvider {
         if (!isNullOrEmpty(list)) {
             return list.get(0);
         } else {
-            throw new NoServiceRegisteredException();
+            throw new NoServiceRegisteredException(serviceName);
         }
     }
 

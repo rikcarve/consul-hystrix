@@ -17,6 +17,6 @@ import javax.inject.Qualifier;
 public @interface DiscoverableService {
 
     @Nonbinding
-    String name();
+    String serviceName();
 
 }

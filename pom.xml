@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.carve</groupId>
     <artifactId>consul-hystrix</artifactId>
@@ -15,7 +15,7 @@
         <ao.docker.host>tcp://192.168.99.100:2376</ao.docker.host>
         <ao.docker.certs>C:/Users/rik/.docker/machine/certs</ao.docker.certs>
     </properties>
- 
+
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
@@ -115,8 +115,8 @@
                             </build>
                             <run>
                                 <ports>
-									<port>8080:8080</port>
-								</ports>
+                                    <port>8080:8080</port>
+                                </ports>
                                 <env>
                                     <!-- <hello-nodes>192.168.99.100:9000</hello-nodes> -->
                                 </env>
@@ -136,6 +136,26 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.7.201606060606</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
 </project>

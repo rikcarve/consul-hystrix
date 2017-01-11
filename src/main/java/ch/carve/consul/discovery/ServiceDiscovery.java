@@ -19,8 +19,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Service discovery which provides a producer for {@link ServiceUriProvider}'s.
- * Injected {@link ServiceDiscoveryBackend}.
- * 
+ * Injected {@link ServiceDiscoveryBackend}. Service discovery can be
+ * overwritten with a environment variable or java property
+ * "<SERVICE_NAME>-nodes" (e.g. "hello-nodes") and a comma separated list of
+ * host:port.
  */
 @Singleton
 public class ServiceDiscovery {

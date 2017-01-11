@@ -10,24 +10,12 @@ import javax.ws.rs.core.MediaType;
 public class HystrixResource {
 
     @Inject
-    HelloWorldCommand helloCommand;
+    private HelloWorldCommand helloCommand;
 
     @GET
     @Path("/")
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
         return helloCommand.execute();
-        // Future<String> future = helloCommand.queue();
-        // StringBuilder builder = new StringBuilder();
-        // for (int i = 0; i < 10; i++) {
-        // builder.append(String.valueOf(i));
-        // }
-        // builder.append(" ");
-        // try {
-        // builder.append(future.get());
-        // } catch (InterruptedException | ExecutionException e) {
-        // e.printStackTrace();
-        // }
-        // return builder.toString();
     }
 }

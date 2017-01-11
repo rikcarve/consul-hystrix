@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ejb.Schedule;
@@ -63,7 +64,7 @@ public class ServiceDiscovery {
     private List<String> checkEnv(String serviceName) {
         List<String> envHosts = envOverrides.get(serviceName);
         if (envHosts == null) {
-            String env = System.getenv(serviceName + "-nodes");
+            String env = getEnvOrSystemProperty(serviceName + "-nodes");
             if (env != null) {
                 logger.info("Environment override: using {} for service {}", env, serviceName);
                 envHosts = Arrays.asList(env.split(","));
@@ -79,4 +80,7 @@ public class ServiceDiscovery {
         return c == null || c.isEmpty();
     }
 
+    private static String getEnvOrSystemProperty(String key) {
+        return Optional.ofNullable(System.getenv(key)).orElse(System.getProperty(key));
+    }
 }

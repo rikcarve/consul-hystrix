@@ -28,7 +28,7 @@ public class ServiceUriProvider {
 
     public URI createUri(String path) {
         currentHost = filter(hosts);
-        logger.info("resolved to {}", currentHost);
+        logger.debug("resolved to {}", currentHost);
         URI newUri = URI.create("http://" + currentHost + path);
         return newUri;
     }

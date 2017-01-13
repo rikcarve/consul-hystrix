@@ -43,7 +43,7 @@ public class ServiceDiscovery {
     @Produces
     @DiscoverableService(serviceName = "producer")
     public ServiceUriProvider getServiceUriProvider(InjectionPoint ip) {
-        logger.info("produce service provider");
+        logger.debug("produce service provider");
         String serviceName = ip.getAnnotated().getAnnotation(DiscoverableService.class).serviceName();
 
         // check for environment overrides

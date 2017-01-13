@@ -12,10 +12,13 @@ public class HystrixResource {
     @Inject
     private HelloWorldCommand helloCommand;
 
+    // @Inject
+    // private WorldCommand worldCommand;
+
     @GET
     @Path("/")
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return helloCommand.execute();
+        return helloCommand.execute();// + " " + worldCommand.execute();
     }
 }

@@ -1,9 +1,8 @@
 package ch.carve.consul.discovery;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Singleton;
@@ -48,7 +47,9 @@ public class ConsulBackend implements ServiceDiscoveryBackend {
      */
     @Override
     public List<String> getUpdatedListOfServers(String service) {
-        List<String> result = Collections.synchronizedList(new ArrayList<>());
+        // List<String> result = Collections.synchronizedList(new
+        // ArrayList<>());
+        List<String> result = new CopyOnWriteArrayList<String>();
         List<ServiceHealth> nodes = consul.healthClient().getHealthyServiceInstances(service).getResponse();
         for (ServiceHealth node : nodes) {
             result.add(node.getService().getAddress() + ":" + node.getService().getPort());

@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 public class ServiceDiscovery {
     private static final Logger logger = LoggerFactory.getLogger(ServiceDiscovery.class);
 
-    private Map<String, List<String>> services = new ConcurrentHashMap<>();
-    private Map<String, List<String>> envOverrides = new ConcurrentHashMap<>();
+    private Map<String, List<String>> services = new ConcurrentHashMap<>(8, 0.75f, 4);
+    private Map<String, List<String>> envOverrides = new ConcurrentHashMap<>(8, 0.75f, 1);
 
     @Inject
     private ServiceDiscoveryBackend backend;
@@ -69,7 +69,7 @@ public class ServiceDiscovery {
             String env = getEnvOrSystemProperty(serviceName + "-nodes");
             if (env != null) {
                 logger.info("Environment override: using {} for service {}", env, serviceName);
-                envHosts = Arrays.asList(env.split(","));
+                envHosts = Collections.synchronizedList(Arrays.asList(env.split(",")));
             } else {
                 envHosts = Collections.emptyList();
             }

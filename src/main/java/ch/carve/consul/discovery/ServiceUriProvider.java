@@ -26,11 +26,24 @@ public class ServiceUriProvider {
         this.hosts = hosts;
     }
 
+    /**
+     * Creates an URI out of a provided path and a available server
+     * @param path
+     * @return
+     */
     public URI createUri(String path) {
         currentHost = filter(hosts);
         logger.debug("resolved to {}", currentHost);
         URI newUri = URI.create("http://" + currentHost + path);
         return newUri;
+    }
+
+    /**
+     * Get <host:port> of an available server as string
+     * @return
+     */
+    public String getHostPort() {
+        return filter(hosts);
     }
 
     /**

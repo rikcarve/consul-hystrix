@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.model.health.ServiceHealth;
+import com.orbitz.consul.option.ImmutableQueryOptions;
+import com.orbitz.consul.option.QueryOptions;
 
 /**
  * Service discovery backend using consul
@@ -24,6 +26,7 @@ public class ConsulBackend implements ServiceDiscoveryBackend {
     private static final Logger logger = LoggerFactory.getLogger(ConsulBackend.class);
 
     private static Consul consul = Consul.builder().withUrl(System.getProperty("consul.url", "http://192.168.99.100:8500")).build();
+    private final QueryOptions queryOptions = ImmutableQueryOptions.builder().near("_agent").build();
 
     /*
      * (non-Javadoc)
@@ -50,7 +53,7 @@ public class ConsulBackend implements ServiceDiscoveryBackend {
         // List<String> result = Collections.synchronizedList(new
         // ArrayList<>());
         List<String> result = new CopyOnWriteArrayList<String>();
-        List<ServiceHealth> nodes = consul.healthClient().getHealthyServiceInstances(service).getResponse();
+        List<ServiceHealth> nodes = consul.healthClient().getHealthyServiceInstances(service, queryOptions).getResponse();
         for (ServiceHealth node : nodes) {
             result.add(node.getService().getAddress() + ":" + node.getService().getPort());
         }

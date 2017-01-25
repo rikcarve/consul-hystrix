@@ -56,11 +56,19 @@ public class ServiceDiscoveryTest {
     }
 
     @Test
-    public void testSingle() {
+    public void testSingleUri() {
         when(backend.getUpdatedListOfServers(SERVICE_NAME)).thenReturn(Arrays.asList(HOST_1));
         ServiceUriProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
         URI uri = uriProvider.createUri("/");
         Assert.assertEquals("http://" + HOST_1 + "/", uri.toString());
+    }
+
+    @Test
+    public void testHostPort() {
+        when(backend.getUpdatedListOfServers(SERVICE_NAME)).thenReturn(Arrays.asList(HOST_1));
+        ServiceUriProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
+        String hostPort = uriProvider.getHostPort();
+        Assert.assertEquals(HOST_1, hostPort);
     }
 
     @Test

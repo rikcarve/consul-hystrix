@@ -14,14 +14,14 @@ import org.slf4j.LoggerFactory;
  * @author rik
  *
  */
-public class ServiceUriProvider {
-    private static final Logger logger = LoggerFactory.getLogger(ServiceUriProvider.class);
+public class ServiceProvider {
+    private static final Logger logger = LoggerFactory.getLogger(ServiceProvider.class);
 
     private String serviceName;
     private List<String> hosts;
     private String currentHost;
 
-    public ServiceUriProvider(String serviceName, List<String> hosts) {
+    public ServiceProvider(String serviceName, List<String> hosts) {
         this.serviceName = serviceName;
         this.hosts = hosts;
     }

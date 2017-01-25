@@ -12,7 +12,7 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 
 import ch.carve.consul.discovery.DiscoverableService;
-import ch.carve.consul.discovery.ServiceUriProvider;
+import ch.carve.consul.discovery.ServiceProvider;
 
 public class WorldCommand extends HystrixCommand<String> {
 
@@ -27,7 +27,7 @@ public class WorldCommand extends HystrixCommand<String> {
 
     @Inject
     @DiscoverableService(serviceName = SERVICE_NAME)
-    private ServiceUriProvider service;
+    private ServiceProvider service;
 
     public WorldCommand() {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(SERVICE_NAME))

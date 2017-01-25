@@ -4,11 +4,11 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-public class ServiceUriProviderTest {
+public class ServiceProviderTest {
 
     @Test(expected = NoServiceRegisteredException.class)
     public void testCreateUri() throws Exception {
-        ServiceUriProvider uriProvider = new ServiceUriProvider("hello", Collections.emptyList());
+        ServiceProvider uriProvider = new ServiceProvider("hello", Collections.emptyList());
         uriProvider.createUri("/");
     }
 

@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Service discovery which provides a producer for {@link ServiceUriProvider}'s.
+ * Service discovery which provides a producer for {@link ServiceProvider}'s.
  * Injected {@link ServiceDiscoveryBackend}. Service discovery can be
  * overwritten with a environment variable or java property
  * "<SERVICE_NAME>-nodes" (e.g. "hello-nodes") and a comma separated list of
@@ -42,14 +42,14 @@ public class ServiceDiscovery {
 
     @Produces
     @DiscoverableService(serviceName = "producer")
-    public ServiceUriProvider getServiceUriProvider(InjectionPoint ip) {
+    public ServiceProvider getServiceUriProvider(InjectionPoint ip) {
         logger.debug("produce service provider");
         String serviceName = ip.getAnnotated().getAnnotation(DiscoverableService.class).serviceName();
 
         // check for environment overrides
         List<String> envHosts = checkEnv(serviceName);
         if (!envHosts.isEmpty()) {
-            return new ServiceUriProvider(serviceName, envHosts);
+            return new ServiceProvider(serviceName, envHosts);
         }
 
         List<String> hosts = services.get(serviceName);
@@ -60,7 +60,7 @@ public class ServiceDiscovery {
             }
             services.put(serviceName, hosts);
         }
-        return new ServiceUriProvider(serviceName, hosts);
+        return new ServiceProvider(serviceName, hosts);
     }
 
     private List<String> checkEnv(String serviceName) {

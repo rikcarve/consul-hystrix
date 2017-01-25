@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
 import ch.carve.consul.discovery.DiscoverableService;
-import ch.carve.consul.discovery.ServiceUriProvider;
+import ch.carve.consul.discovery.ServiceProvider;
 
 @Path("/discovery")
 public class DiscoveryResource {
@@ -28,7 +28,7 @@ public class DiscoveryResource {
 
     @Inject
     @DiscoverableService(serviceName = SERVICE_NAME)
-    private ServiceUriProvider service;
+    private ServiceProvider service;
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)

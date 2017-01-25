@@ -58,7 +58,7 @@ public class ServiceDiscoveryTest {
     @Test
     public void testSingleUri() {
         when(backend.getUpdatedListOfServers(SERVICE_NAME)).thenReturn(Arrays.asList(HOST_1));
-        ServiceUriProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
+        ServiceProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
         URI uri = uriProvider.createUri("/");
         Assert.assertEquals("http://" + HOST_1 + "/", uri.toString());
     }
@@ -66,7 +66,7 @@ public class ServiceDiscoveryTest {
     @Test
     public void testHostPort() {
         when(backend.getUpdatedListOfServers(SERVICE_NAME)).thenReturn(Arrays.asList(HOST_1));
-        ServiceUriProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
+        ServiceProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
         String hostPort = uriProvider.getHostPort();
         Assert.assertEquals(HOST_1, hostPort);
     }
@@ -74,7 +74,7 @@ public class ServiceDiscoveryTest {
     @Test
     public void testNotifyError() {
         when(backend.getUpdatedListOfServers(SERVICE_NAME)).thenReturn(new LinkedList<>(Arrays.asList(HOST_1, HOST_2)));
-        ServiceUriProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
+        ServiceProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
         URI uri = uriProvider.createUri("/");
         uriProvider.notifyError();
         uri = uriProvider.createUri("/");
@@ -97,7 +97,7 @@ public class ServiceDiscoveryTest {
     @Test
     public void testEnvOverride() {
         System.setProperty(SERVICE_NAME + "-nodes", HOST_1);
-        ServiceUriProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
+        ServiceProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
         URI uri = uriProvider.createUri("/");
         Assert.assertEquals("http://" + HOST_1 + "/", uri.toString());
         System.clearProperty(SERVICE_NAME + "-nodes");

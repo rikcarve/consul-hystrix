@@ -1,5 +1,7 @@
 package ch.carve.consul.discovery;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -13,16 +15,16 @@ import java.util.LinkedList;
 import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.InjectionPoint;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(JUnitPlatform.class)
 public class ServiceDiscoveryTest {
     private static final String SERVICE_NAME = "hello";
 
@@ -37,8 +39,9 @@ public class ServiceDiscoveryTest {
 
     private InjectionPoint ip = mock(InjectionPoint.class);
 
-    @Before
+    @BeforeEach
     public void initTest() {
+        MockitoAnnotations.initMocks(this);
         Annotated annotated = mock(Annotated.class);
         when(annotated.getAnnotation(DiscoverableService.class)).thenReturn(new DiscoverableService() {
 
@@ -60,7 +63,7 @@ public class ServiceDiscoveryTest {
         when(backend.getUpdatedListOfServers(SERVICE_NAME)).thenReturn(Arrays.asList(HOST_1));
         ServiceUriProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
         URI uri = uriProvider.createUri("/");
-        Assert.assertEquals("http://" + HOST_1 + "/", uri.toString());
+        assertEquals("http://" + HOST_1 + "/", uri.toString());
     }
 
     @Test
@@ -70,7 +73,7 @@ public class ServiceDiscoveryTest {
         URI uri = uriProvider.createUri("/");
         uriProvider.notifyError();
         uri = uriProvider.createUri("/");
-        Assert.assertEquals("http://" + HOST_2 + "/", uri.toString());
+        assertEquals("http://" + HOST_2 + "/", uri.toString());
     }
 
     @Test
@@ -81,9 +84,9 @@ public class ServiceDiscoveryTest {
         verify(backend, times(1)).updateListAsync(Mockito.anyString(), Mockito.anyMap());
     }
 
-    @Test(expected = NoServiceRegisteredException.class)
+    @Test
     public void testNoServiceRegistered() {
-        serviceDiscovery.getServiceUriProvider(ip);
+        assertThrows(NoServiceRegisteredException.class, () -> serviceDiscovery.getServiceUriProvider(ip));
     }
 
     @Test
@@ -91,7 +94,7 @@ public class ServiceDiscoveryTest {
         System.setProperty(SERVICE_NAME + "-nodes", HOST_1);
         ServiceUriProvider uriProvider = serviceDiscovery.getServiceUriProvider(ip);
         URI uri = uriProvider.createUri("/");
-        Assert.assertEquals("http://" + HOST_1 + "/", uri.toString());
+        assertEquals("http://" + HOST_1 + "/", uri.toString());
         System.clearProperty(SERVICE_NAME + "-nodes");
     }
 }

@@ -3,7 +3,7 @@ package ch.carve.consul;
 import javax.ws.rs.core.Response;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SimpleHealthcheckTest {
 

@@ -14,10 +14,8 @@
         <resteasy.version>3.0.14.Final</resteasy.version>
         <ao.docker.host>tcp://192.168.99.100:2376</ao.docker.host>
         <ao.docker.certs>C:/Users/rik/.docker/machine/certs</ao.docker.certs>
-        <junit.version>4.12</junit.version>
-        <junit.jupiter.version>5.0.0-M3</junit.jupiter.version>
-        <junit.vintage.version>${junit.version}.0-M3</junit.vintage.version>
-        <junit.platform.version>1.0.0-M3</junit.platform.version>
+        <junit.jupiter.version>5.0.1</junit.jupiter.version>
+        <junit.platform.version>1.0.1</junit.platform.version>
     </properties>
 
     <dependencies>
@@ -59,19 +57,6 @@
             <artifactId>consul-client</artifactId>
             <version>0.13.8</version>
         </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-runner</artifactId>
@@ -102,63 +87,6 @@
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.19.0</version>
-                <configuration>
-                    <dockerHost>${ao.docker.host}</dockerHost>
-                    <certPath>${ao.docker.certs}</certPath>
-                    <registry>docker.io</registry>
-                    <images>
-                        <image>
-                            <name>rikcarve/${project.artifactId}:latest</name>
-                            <build>
-                                <from>jboss/wildfly</from>
-                                <ports>
-                                    <port>8080</port>
-                                </ports>
-                                <tags>
-                                    <tag>latest</tag>
-                                    <tag>${project.version}</tag>
-                                </tags>
-                                <assembly>
-                                    <mode>dir</mode>
-                                    <basedir>/opt/jboss/wildfly/standalone/</basedir>
-                                    <user>jboss:jboss:jboss</user>
-                                    <inline>
-                                        <files>
-                                            <file>
-                                                <source>target/${project.build.finalName}.war</source>
-                                                <outputDirectory>/deployments/</outputDirectory>
-                                            </file>
-                                        </files>
-                                    </inline>
-                                </assembly>
-                            </build>
-                            <run>
-                                <ports>
-                                    <port>8080:8080</port>
-                                </ports>
-                                <env>
-                                    <!-- <hello-nodes>192.168.99.100:9000</hello-nodes> -->
-                                </env>
-                                <log>
-                                    <prefix>DOCKER</prefix>
-                                </log>
-                            </run>
-                        </image>
-                    </images>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
@@ -168,22 +96,16 @@
                         <include>**/*Tests.java</include>
                         <include>**/*TestCase.java</include>
                     </includes>
+                    <properties>
+                        <!-- <includeTags>fast</includeTags> -->
+                        <excludeTags>slow</excludeTags>
+                    </properties>
                 </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.junit.platform</groupId>
                         <artifactId>junit-platform-surefire-provider</artifactId>
                         <version>${junit.platform.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>${junit.jupiter.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.junit.vintage</groupId>
-                        <artifactId>junit-vintage-engine</artifactId>
-                        <version>${junit.vintage.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>

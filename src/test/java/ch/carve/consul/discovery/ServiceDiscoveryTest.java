@@ -24,7 +24,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-@RunWith(JUnitPlatform.class)
 public class ServiceDiscoveryTest {
     private static final String SERVICE_NAME = "hello";
 
